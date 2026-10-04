@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Form 예제 모음 - 바이브코딩</title>
+  <link rel="stylesheet" href="html_form.css">
+</head>
+<body>
+
+  <h1>🎨 HTML Form 예제 모음</h1>
+  <p class="subtitle">바이브코딩으로 배우는 폼(form)의 모든 것 · 대학교 1학년용</p>
+
+  <!-- ============================================================
+       예제 1. 학식 주문하기
+       배우는 것: text, number, select, radio, submit
+       ============================================================ -->
+  <div class="card">
+    <h2>🍚 예제 1. 오늘 학식 주문하기</h2>
+    <p class="hint">배우는 태그: input(text, number) · select · radio · button</p>
+
+    <form id="lunchForm">
+      <label for="name">이름</label>
+      <input type="text" id="name" name="name" placeholder="홍길동" required>
+
+      <label for="menu">메뉴 선택</label>
+      <select id="menu" name="menu" required>
+        <option value="">-- 메뉴를 골라주세요 --</option>
+        <option value="제육덮밥">🐷 제육덮밥 (5,500원)</option>
+        <option value="치즈돈까스">🧀 치즈돈까스 (6,000원)</option>
+        <option value="마라탕">🌶️ 마라탕 (7,500원)</option>
+        <option value="샐러드">🥗 다이어트 샐러드 (4,500원)</option>
+      </select>
+
+      <label for="count">수량</label>
+      <input type="number" id="count" name="count" min="1" max="10" value="1">
+
+      <label>매운맛 단계</label>
+      <div class="inline">
+        <label><input type="radio" name="spicy" value="순한맛" checked> 😊 순한맛</label>
+        <label><input type="radio" name="spicy" value="보통"> 😅 보통</label>
+        <label><input type="radio" name="spicy" value="불닭급"> 🔥 불닭급</label>
+      </div>
+
+      <button type="submit">주문하기</button>
+    </form>
+    <div class="result" id="lunchResult"></div>
+  </div>
+
+  <!-- ============================================================
+       예제 2. 동아리 가입 신청서
+       배우는 것: email, password, checkbox, textarea, date, required
+       ============================================================ -->
+  <div class="card">
+    <h2>🎸 예제 2. 동아리 가입 신청서</h2>
+    <p class="hint">배우는 태그: input(email, password, date) · checkbox · textarea · required 속성</p>
+
+    <form id="clubForm">
+      <label for="studentId">학번</label>
+      <input type="text" id="studentId" name="studentId" placeholder="20260001" pattern="[0-9]{8}" title="숫자 8자리" required>
+
+      <label for="email">학교 이메일</label>
+      <input type="email" id="email" name="email" placeholder="you@school.ac.kr" required>
+
+      <label for="pw">비밀번호 (4자 이상)</label>
+      <input type="password" id="pw" name="pw" minlength="4" required>
+
+      <label for="birthday">생년월일</label>
+      <input type="date" id="birthday" name="birthday">
+
+      <label>관심 동아리 (여러 개 선택 가능)</label>
+      <div class="inline">
+        <label><input type="checkbox" name="club" value="밴드"> 🎸 밴드</label>
+        <label><input type="checkbox" name="club" value="코딩"> 💻 코딩</label>
+        <label><input type="checkbox" name="club" value="댄스"> 💃 댄스</label>
+        <label><input type="checkbox" name="club" value="게임"> 🎮 게임</label>
+        <label><input type="checkbox" name="club" value="맛집탐방"> 🍜 맛집탐방</label>
+      </div>
+
+      <label for="intro">자기소개 한 줄</label>
+      <textarea id="intro" name="intro" rows="3" placeholder="예: 3시간 만에 자기소개 페이지를 만들 수 있어요!"></textarea>
+
+      <label><input type="checkbox" id="agree" required> 회비 납부에 동의합니다 (필수)</label>
+
+      <button type="submit">가입 신청</button>
+    </form>
+    <div class="result" id="clubResult"></div>
+  </div>
+
+  <!-- ============================================================
+       예제 3. 밸런스 게임 투표
+       배우는 것: radio 그룹 여러 개, range, reset 버튼
+       ============================================================ -->
+  <div class="card">
+    <h2>⚖️ 예제 3. 밸런스 게임</h2>
+    <p class="hint">배우는 태그: radio 그룹 · input(range) · output · reset 버튼</p>
+
+    <form id="balanceForm">
+      <label>Q1. 평생 한 가지만 먹기</label>
+      <div class="inline">
+        <label><input type="radio" name="q1" value="치킨" required> 🍗 치킨</label>
+        <label><input type="radio" name="q1" value="피자"> 🍕 피자</label>
+      </div>
+
+      <label>Q2. 시험 기간에 더 싫은 것</label>
+      <div class="inline">
+        <label><input type="radio" name="q2" value="팀플" required> 👥 팀플</label>
+        <label><input type="radio" name="q2" value="개인과제"> 📝 개인과제 5개</label>
+      </div>
+
+      <label>Q3. 1교시 수업 vs 9교시 수업</label>
+      <div class="inline">
+        <label><input type="radio" name="q3" value="1교시" required> 🌅 1교시</label>
+        <label><input type="radio" name="q3" value="9교시"> 🌙 9교시</label>
+      </div>
+
+      <label for="confidence">이 선택에 얼마나 확신하나요? <output id="confOut">50</output>%</label>
+      <input type="range" id="confidence" name="confidence" min="0" max="100" value="50"
+             >
+
+      <button type="submit">결과 보기</button>
+      <button type="reset" class="secondary">다시 하기</button>
+    </form>
+    <div class="result" id="balanceResult"></div>
+  </div>
+
+  <!-- ============================================================
+       예제 4. 나의 이상적인 하루 계획표
+       배우는 것: time, color, file, datalist, fieldset/legend
+       ============================================================ -->
+  <div class="card">
+    <h2>🌈 예제 4. 나만의 하루 만들기</h2>
+    <p class="hint">배우는 태그: input(time, color, file) · datalist · fieldset · legend</p>
+
+    <form id="dayForm">
+      <fieldset class="day-schedule">
+        <legend class="day-schedule-title">⏰ 시간 설정</legend>
+        <label for="wake">기상 시간</label>
+        <input type="time" id="wake" name="wake" value="07:30">
+        <label for="sleep">취침 시간</label>
+        <input type="time" id="sleep" name="sleep" value="23:30">
+      </fieldset>
+
+      <label for="mood">오늘의 기분 색깔</label>
+      <input type="color" id="mood" name="mood" value="#5b6cff" class="mood-picker">
+
+      <label for="place">가고 싶은 장소 (입력하면 추천이 떠요)</label>
+      <input type="text" id="place" name="place" list="places" placeholder="ㅎ 만 쳐보세요">
+      <datalist id="places">
+        <option value="한강 공원">
+        <option value="홍대 거리">
+        <option value="학교 도서관">
+        <option value="을지로 카페">
+        <option value="제주도">
+      </datalist>
+
+      <label for="photo">오늘의 사진 한 장</label>
+      <input type="file" id="photo" name="photo" accept="image/*">
+
+      <button type="submit">하루 완성!</button>
+    </form>
+    <div class="result" id="dayResult"></div>
+  </div>
+
+  <!-- ============================================================
+       바이브코딩 실습 프롬프트
+       ============================================================ -->
+  <div class="prompt-box">
+    <b>💡 바이브코딩 실습 프롬프트 (AI에게 이렇게 말해보세요)</b><br>
+    ① "예제 1에 <b>음료 선택 체크박스</b>를 추가하고, 총 금액을 계산해서 보여줘"<br>
+    ② "예제 2에서 동아리를 <b>3개 이상 고르면 경고</b>가 뜨게 해줘"<br>
+    ③ "예제 3 결과를 <b>'당신은 OO형 대학생'</b> 같은 재미있는 성향 분석으로 바꿔줘"<br>
+    ④ "예제 4에 <b>선택한 색깔로 카드 배경</b>이 바뀌게 만들어줘"<br>
+    ⑤ "전체 디자인을 <b>다크모드</b>로 바꿔줘"
+  </div>
+
+  <script src="html_sample.js"></script>
+</body>
+</html>

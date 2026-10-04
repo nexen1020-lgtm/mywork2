@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>준모네 옷가게 - 서울 쇼핑 지도</title>
+  <style>
+    /* ============================================================
+       [전체 디자인 & 공통 스타일]
+       - 카페 느낌의 따뜻한 베이지(#faf6f0)와 브라운(#6b4226) 컬러
+       - 부드러운 그림자와 둥근 모서리 적용
+       - 최대 너비 520px 및 화면 가운데 정렬
+       - 폰트: '맑은 고딕', sans-serif
+       ============================================================ */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #faf6f0; /* 따뜻한 카페 베이지 배경색 */
+      font-family: '맑은 고딕', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #3e2719; /* 브라운 텍스트 색상 */
+      line-height: 1.6;
+      padding: 30px 16px 60px;
+    }
+
+    /* 최대 너비 520px, 가운데 정렬 컨테이너 */
+    .app-container {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ============================================================
+       [페이지 상단 헤더 영역]
+       - 로고(옷 이모지), 웹 이름("준모네 옷가게"), 부제
+       ============================================================ */
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 20px 10px;
+    }
+
+    /* 옷 이모지 로고 */
+    .header .logo {
+      font-size: 48px;
+      margin-bottom: 8px;
+      display: inline-block;
+      filter: drop-shadow(0 4px 6px rgba(107, 66, 38, 0.15));
+      animation: float 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes float {
+      from { transform: translateY(0); }
+      to { transform: translateY(-5px); }
+    }
+
+    /* 웹 이름 */
+    .header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #6b4226; /* 메인 브라운 */
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    /* 부제 */
+    .header .subtitle {
+      font-size: 14px;
+      color: #8c6a53;
+      font-weight: 500;
+    }
+
+    /* 테마 뱃지 */
+    .header .badge {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 12px;
+      font-size: 12px;
+      background-color: #ede2d3;
+      color: #6b4226;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       [카드 박스 공통 디자인]
+       - 둥근 모서리와 부드러운 그림자
+       ============================================================ */
+    .card {
+      background-color: #ffffff;
+      border-radius: 16px; /* 둥근 모서리 */
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(107, 66, 38, 0.08); /* 부드러운 그림자 */
+      border: 1px solid #f0e6dc;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #6b4226;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1.5px dashed #ede2d3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ============================================================
+       [스타일 세부사항: 입력칸 & 라벨]
+       - 너비 100%, 패딩 10px, 둥근 모서리 8px
+       - 포커스 시 테두리 갈색 + 연한 갈색 그림자
+       ============================================================ */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    /* 라벨 스타일 (모든 input에 라벨 연결 필수) */
+    label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #5c3a21;
+      margin-bottom: 6px;
+    }
+
+    /* 텍스트/숫자 입력창, 셀렉트박스, 텍스트에어리어 */
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%; /* 너비 100% */
+      padding: 10px; /* 패딩 10px */
+      border-radius: 8px; /* 둥근 모서리 8px */
+      border: 1.5px solid #d9cdbe;
+      background-color: #fdfcf9;
+      font-size: 14px;
+      font-family: inherit;
+      color: #333;
+      transition: all 0.2s ease-in-out;
+    }
+
+    /* 입력칸 포커스 시 효과: 테두리 갈색 + 연한 갈색 그림자 */
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #6b4226; /* 갈색 테두리 */
+      box-shadow: 0 0 0 3px rgba(107, 66, 38, 0.18); /* 연한 갈색 그림자 */
+      background-color: #ffffff;
+    }
+
+    /* textarea 크기 조절 */
+    textarea {
+      resize: vertical;
+      min-height: 75px;
+    }
+
+    /* 실시간 금액 변환 미리보기 안내문구 */
+    .price-preview {
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #8c562e;
+      background-color: #f9f3eb;
+      padding: 6px 10px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    /* 라디오 버튼 그룹 (카테고리 선택) */
+    fieldset {
+      border: 1.5px solid #e8ded2;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      background-color: #fcfaf7;
+    }
+
+    legend {
+      font-size: 13px;
+      font-weight: 700;
+      color: #6b4226;
+      padding: 0 6px;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .radio-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .radio-item label {
+      margin-bottom: 0;
+      font-weight: 500;
+      font-size: 13.5px;
+      cursor: pointer;
+    }
+
+    .radio-item input[type="radio"] {
+      accent-color: #6b4226; /* 라디오 체크 색상 갈색 */
+      cursor: pointer;
+    }
+
+    /* ============================================================
+       [버튼 스타일]
+       ============================================================ */
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    /* 등록 버튼 (주 버튼) */
+    .btn-submit {
+      background-color: #6b4226;
+      color: #ffffff;
+      box-shadow: 0 3px 8px rgba(107, 66, 38, 0.25);
+    }
+
+    .btn-submit:hover {
+      background-color: #55331c;
+    }
+
+    /* 초기화 버튼 (보조 버튼) */
+    .btn-reset {
+      background-color: #ede2d3;
+      color: #6b4226;
+      flex: 0.4;
+    }
+
+    .btn-reset:hover {
+      background-color: #ded1bf;
+    }
+
+    /* ============================================================
+       [게시판 목록 (서울 쇼핑 지도 피드) 스타일]
+       ============================================================ */
+    .feed-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .feed-header h2 {
+      font-size: 18px;
+      color: #6b4226;
+    }
+
+    .feed-count {
+      font-size: 13px;
+      color: #8c6a53;
+      font-weight: 600;
+      background-color: #f4ecdf;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    /* 게시글 카드 아이템 */
+    .post-item {
+      background-color: #fdfbf7;
+      border: 1.5px solid #eee4d7;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .post-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(107, 66, 38, 0.08);
+    }
+
+    .post-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .post-region {
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      background-color: #8c562e;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .post-author {
+      font-size: 13px;
+      font-weight: 600;
+      color: #73533d;
+    }
+
+    .post-item-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #3e2719;
+      margin-bottom: 4px;
+    }
+
+    .post-price-badge {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #6b4226;
+      background-color: #f3e9dc;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .post-review {
+      font-size: 13.5px;
+      color: #55443a;
+      white-space: pre-wrap;
+      line-height: 1.5;
+      background-color: #ffffff;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #f0e6dc;
+    }
+
+    .post-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #9c806d;
+    }
+
+    /* 삭제 버튼 */
+    .btn-delete {
+      background: none;
+      border: none;
+      color: #b54737;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 2px 6px;
+      text-decoration: underline;
+    }
+
+    .btn-delete:hover {
+      color: #8e2b1d;
+    }
+
+    /* 빈 목록 안내 */
+    .empty-message {
+      text-align: center;
+      padding: 30px;
+      color: #a8917e;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- ============================================================
+         1. [페이지 상단 헤더]
+         - 로고: 옷 이모지 (👗)
+         - 웹 이름: "준모네 옷가게"
+         - 부제: "당신의 하루에 김준모를 더하다"
+         ============================================================ -->
+    <header class="header">
+      <div class="logo" role="img" aria-label="옷 로고">👗</div>
+      <h1>준모네 옷가게</h1>
+      <p class="subtitle">당신의 하루에 김준모를 더하다</p>
+      <span class="badge">📍 서울 쇼핑 지도 게시판</span>
+    </header>
+
+    <!-- ============================================================
+         2. [쇼핑 후기 등록 폼 카드]
+         - 모든 input과 select, textarea에 label 연결 (for - id 매칭)
+         ============================================================ -->
+    <section class="card">
+      <h2 class="card-title">🛍️ 새 쇼핑 후기 남기기</h2>
+
+      <form id="shoppingForm">
+
+        <!-- 작성자 닉네임 입력 (label for="author" 연결) -->
+        <div class="form-group">
+          <label for="author">작성자 닉네임</label>
+          <input 
+            type="text" 
+            id="author" 
+            name="author" 
+            placeholder="예: 성수동멋쟁이" 
+            required
+          >
+        </div>
+
+        <!-- 서울 쇼핑 지역 선택 (label for="region" 연결) -->
+        <div class="form-group">
+          <label for="region">쇼핑 지역 (서울)</label>
+          <select id="region" name="region" required>
+            <option value="">-- 서울 쇼핑 스팟을 선택하세요 --</option>
+            <option value="성수 연무장길">성수 연무장길</option>
+            <option value="한남동 카페거리">한남동 / 이태원</option>
+            <option value="홍대·연남 쇼룸">홍대 · 연남 쇼룸</option>
+            <option value="압구정 로데오">압구정 로데오 / 가로수길</option>
+            <option value="동대문 패션타운">동대문 패션타운</option>
+            <option value="더현대 서울(여의도)">더현대 서울 (여의도)</option>
+            <option value="잠실 롯데월드몰">잠실 롯데월드몰</option>
+          </select>
+        </div>
+
+        <!-- 구매 아이템 입력 (label for="itemName" 연결) -->
+        <div class="form-group">
+          <label for="itemName">구매 아이템명</label>
+          <input 
+            type="text" 
+            id="itemName" 
+            name="itemName" 
+            placeholder="예: 캐시미어 블렌드 오버핏 가디건" 
+            required
+          >
+        </div>
+
+        <!-- 구매 금액 입력 (label for="itemPrice" 연결) -->
+        <!-- 천 단위 콤마 실시간 변환 미리보기 제공 -->
+        <div class="form-group">
+          <label for="itemPrice">구매 금액 (원)</label>
+          <input 
+            type="number" 
+            id="itemPrice" 
+            name="itemPrice" 
+            placeholder="예: 79000 (숫자만 입력)" 
+            min="0" 
+            step="100" 
+            required
+          >
+          <div class="price-preview" id="pricePreview">
+            실제 표기: <span id="priceFormatted">0</span>원
+          </div>
+        </div>
+
+        <!-- 의류 카테고리 (라디오 버튼 - 모든 항목마다 label for와 input id 연결) -->
+        <fieldset>
+          <legend>의류 카테고리</legend>
+          <div class="radio-group">
+            <div class="radio-item">
+              <input type="radio" id="cat-top" name="category" value="상의" checked>
+              <label for="cat-top">상의</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" id="cat-outer" name="category" value="아우터">
+              <label for="cat-outer">아우터</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" id="cat-bottom" name="category" value="하의">
+              <label for="cat-bottom">하의</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" id="cat-dress" name="category" value="원피스/세트">
+              <label for="cat-dress">원피스/세트</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" id="cat-acc" name="category" value="잡화/신발">
+              <label for="cat-acc">잡화/신발</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- 쇼핑 만족도 선택 (label for="rating" 연결) -->
+        <div class="form-group">
+          <label for="rating">만족도 평점</label>
+          <select id="rating" name="rating">
+            <option value="⭐⭐⭐⭐⭐ 5점 (인생 옷 등극!)">⭐⭐⭐⭐⭐ 5점 (인생 옷 등극!)</option>
+            <option value="⭐⭐⭐⭐ 4점 (매우 만족)">⭐⭐⭐⭐ 4점 (매우 만족)</option>
+            <option value="⭐⭐⭐ 3점 (보통이에요)">⭐⭐⭐ 3점 (보통이에요)</option>
+            <option value="⭐⭐ 2점 (조금 아쉬워요)">⭐⭐ 2점 (조금 아쉬워요)</option>
+            <option value="⭐ 1점 (추천하지 않아요)">⭐ 1점 (추천하지 않아요)</option>
+          </select>
+        </div>
+
+        <!-- 쇼핑 후기 본문 입력 (label for="reviewContent" 연결) -->
+        <div class="form-group">
+          <label for="reviewContent">상세 쇼핑 후기 &amp; 핏 정보</label>
+          <textarea 
+            id="reviewContent" 
+            name="reviewContent" 
+            rows="3" 
+            placeholder="사이즈감, 소재 느낌, 매장 분위기 등을 자유롭게 공유해주세요."
+            required
+          ></textarea>
+        </div>
+
+        <!-- 제출 및 초기화 버튼 그룹 -->
+        <div class="button-group">
+          <button type="submit" class="btn-submit">✨ 후기 등록하기</button>
+          <button type="reset" class="btn-reset" id="resetBtn">초기화</button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- ============================================================
+         3. [서울 쇼핑 피드 게시판 목록]
+         - 등록된 쇼핑 후기 목록 카드 형태로 노출
+         ============================================================ -->
+    <section class="card">
+      <div class="feed-header">
+        <h2>🗺️ 서울 쇼핑 피드</h2>
+        <span class="feed-count" id="feedCount">총 2개</span>
+      </div>
+
+      <!-- 후기 글들이 동적으로 추가되는 컨테이너 -->
+      <div id="postsContainer"></div>
+    </section>
+
+  </div>
+
+  <!-- ============================================================
+       [JavaScript 기능]
+       - 폼 제출 시 이벤트 제어 및 새 게시물 추가
+       - 금액은 천 단위 콤마(toLocaleString) 적용
+       - 한국어 상세 주석 포함
+       ============================================================ -->
+  <script>
+    // 1. 초기 샘플 데이터 (화면에 미리 보여줄 게시글 목록)
+    const initialPosts = [
+      {
+        id: 1,
+        author: "김준모",
+        region: "성수 연무장길",
+        itemName: "미니멀 울 블루종 자켓",
+        price: 128000,
+        category: "아우터",
+        rating: "⭐⭐⭐⭐⭐ 5점 (인생 옷 등극!)",
+        review: "성수동 쇼룸 투어하다가 핏이 너무 예뻐서 바로 샀습니다! 어깨 라인 자연스럽고 도톰해서 요즘 날씨에 딱이에요.",
+        date: "2026.10.01"
+      },
+      {
+        id: 2,
+        author: "연남러버",
+        region: "홍대·연남 쇼룸",
+        itemName: "와이드 턱 치노 팬츠",
+        price: 59000,
+        category: "하의",
+        rating: "⭐⭐⭐⭐ 4점 (매우 만족)",
+        review: "기장감도 적당하고 허리 밴딩이 편해서 매일 입고 다니는 데일리 팬츠입니다.",
+        date: "2026.09.30"
+      }
+    ];
+
+    // 게시글 데이터를 보관하는 배열
+    let posts = [...initialPosts];
+
+    // 주요 DOM 요소 가져오기
+    const shoppingForm = document.getElementById('shoppingForm');
+    const itemPriceInput = document.getElementById('itemPrice');
+    const priceFormattedSpan = document.getElementById('priceFormatted');
+    const postsContainer = document.getElementById('postsContainer');
+    const feedCountSpan = document.getElementById('feedCount');
+    const resetBtn = document.getElementById('resetBtn');
+
+    /**
+     * 금액을 천 단위 콤마 형식 문자열로 변환하는 함수
+     * @param {number|string} value - 숫자 또는 숫자 형태의 문자열
+     * @returns {string} 1,000 단위 콤마가 적용된 문자열
+     */
+    function formatPrice(value) {
+      const num = Number(value);
+      // 숫자가 유효하지 않거나 0 이하인 경우 0으로 처리
+      if (isNaN(num)) return "0";
+      return num.toLocaleString(); // toLocaleString 사용 필수 조건 충족
+    }
+
+    /**
+     * 입력칸의 금액 변경 시 실시간으로 콤마 미리보기를 업데이트하는 이벤트 리스너
+     */
+    itemPriceInput.addEventListener('input', function () {
+      const currentVal = this.value;
+      priceFormattedSpan.textContent = formatPrice(currentVal);
+    });
+
+    /**
+     * 폼 초기화 버튼 클릭 시 실시간 금액 미리보기도 0으로 리셋
+     */
+    resetBtn.addEventListener('click', function () {
+      setTimeout(() => {
+        priceFormattedSpan.textContent = "0";
+      }, 0);
+    });
+
+    /**
+     * 게시글 목록을 화면에 렌더링하는 함수
+     */
+    function renderPosts() {
+      // 게시글 총 개수 표시 업데이트
+      feedCountSpan.textContent = `총 ${posts.length}개`;
+
+      // 게시글이 없을 때 메시지 표시
+      if (posts.length === 0) {
+        postsContainer.innerHTML = `
+          <div class="empty-message">
+            등록된 쇼핑 후기가 없습니다.<br>
+            첫 번째 서울 쇼핑 후기를 남겨보세요! ✨
+          </div>
+        `;
+        return;
+      }
+
+      // 게시글 목록 카드 HTML 생성
+      postsContainer.innerHTML = posts.map(post => {
+        // 천 단위 콤마가 적용된 금액 문자열
+        const formattedPrice = formatPrice(post.price);
+
+        return `
+          <article class="post-item" data-id="${post.id}">
+            <div class="post-top">
+              <span class="post-region">📍 ${escapeHtml(post.region)}</span>
+              <span class="post-author">${escapeHtml(post.author)}님</span>
+            </div>
+
+            <div class="post-item-name">
+              ${escapeHtml(post.itemName)}
+              <span style="font-size: 12px; font-weight: normal; color: #8c6a53;">[${escapeHtml(post.category)}]</span>
+            </div>
+
+            <!-- 천 단위 콤마가 표시된 금액 영역 -->
+            <div class="post-price-badge">
+              💰 구매가: ${formattedPrice}원
+            </div>
+
+            <div style="font-size: 12.5px; color: #8c562e; margin-bottom: 6px;">
+              ${escapeHtml(post.rating)}
+            </div>
+
+            <div class="post-review">${escapeHtml(post.review)}</div>
+
+            <div class="post-footer">
+              <span>📅 ${post.date}</span>
+              <button type="button" class="btn-delete" onclick="deletePost(${post.id})">삭제</button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    /**
+     * 특정 게시글을 삭제하는 함수
+     * @param {number} id - 삭제할 게시글 고유 ID
+     */
+    function deletePost(id) {
+      if (confirm("이 쇼핑 후기를 삭제하시겠습니까?")) {
+        posts = posts.filter(post => post.id !== id);
+        renderPosts();
+      }
+    }
+
+    /**
+     * XSS 방지를 위한 특수문자 HTML 엔티티 치환 함수
+     * @param {string} text - 원본 텍스트
+     * @returns {string} 이스케이프 처리된 안전한 텍스트
+     */
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text
+        .toString()
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /**
+     * 현재 날짜를 "YYYY.MM.DD" 형식으로 반환하는 함수
+     */
+    function getTodayString() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return `${year}.${month}.${day}`;
+    }
+
+    /**
+     * 폼 제출(Submit) 이벤트 핸들러
+     * - 서버 요청 대신 e.preventDefault()로 페이지 새로고침 방지
+     * - 입력값 취득 및 유효성 검사 후 목록에 등록
+     */
+    shoppingForm.addEventListener('submit', function (e) {
+      e.preventDefault(); // 새로고침 방지
+
+      // 폼 입력 데이터 가져오기
+      const author = document.getElementById('author').value.trim();
+      const region = document.getElementById('region').value;
+      const itemName = document.getElementById('itemName').value.trim();
+      const itemPrice = Number(document.getElementById('itemPrice').value);
+      const categoryElement = document.querySelector('input[name="category"]:checked');
+      const category = categoryElement ? categoryElement.value : "기타";
+      const rating = document.getElementById('rating').value;
+      const reviewContent = document.getElementById('reviewContent').value.trim();
+
+      // 필수 항목 재검증
+      if (!author || !region || !itemName || isNaN(itemPrice) || !reviewContent) {
+        alert("모든 필수 항목을 올바르게 입력해주세요.");
+        return;
+      }
+
+      // 새 게시글 객체 생성
+      const newPost = {
+        id: Date.now(), // 고유 ID 생성 (타임스탬프)
+        author: author,
+        region: region,
+        itemName: itemName,
+        price: itemPrice, // 숫자로 저장
+        category: category,
+        rating: rating,
+        review: reviewContent,
+        date: getTodayString()
+      };
+
+      // 배열 가장 앞(최신순)에 새 게시물 추가
+      posts.unshift(newPost);
+
+      // 화면 재렌더링
+      renderPosts();
+
+      // 폼 초기화 및 미리보기 초기화
+      shoppingForm.reset();
+      priceFormattedSpan.textContent = "0";
+
+      // 등록 완료 안내
+      alert(`🎉 [${region}] ${itemName} 쇼핑 후기가 성공적으로 등록되었습니다!`);
+    });
+
+    /**
+     * ============================================================
+     * [엑셀 저장 기능]
+     * - SheetJS 라이브러리를 통해 .xlsx 형식으로 즉시 다운로드
+     * - 외부 라이브러리 미지원/오프라인 환경인 경우 UTF-8 BOM CSV로 안전하게 fallback
+     * ============================================================
+     */
+    function exportToExcel() {
+      // 1. 등록된 게시글 데이터가 없는 경우 예외 처리
+      if (!posts || posts.length === 0) {
+        alert("⚠️ 저장할 쇼핑 후기 데이터가 없습니다. 먼저 후기를 작성해주세요!");
+        return;
+      }
+
+      // 오늘 날짜 문자열 생성 (예: 20261001)
+      const dateStr = getTodayString().replace(/\./g, '');
+      const defaultFileName = `준모네옷가게_서울쇼핑후기_${dateStr}`;
+
+      // 2. SheetJS(XLSX) 라이브러리를 통한 실제 .xlsx 엑셀 파일 생성
+      if (typeof XLSX !== 'undefined') {
+        try {
+          // 엑셀 시트에 들어갈 행 데이터 매핑
+          const excelData = posts.map((post, index) => ({
+            "번호": index + 1,
+            "작성일자": post.date,
+            "쇼핑지역": post.region,
+            "작성자": post.author,
+            "구매아이템": post.itemName,
+            "카테고리": post.category,
+            "구매금액(원)": post.price,
+            "만족도": post.rating,
+            "상세후기": post.review
+          }));
+
+          // JSON 데이터를 엑셀 워크시트로 변환
+          const worksheet = XLSX.utils.json_to_sheet(excelData);
+
+          // 열 너비(컬럼 폭) 보기 좋게 자동 조정
+          worksheet['!cols'] = [
+            { wch: 6 },  // 번호
+            { wch: 12 }, // 작성일자
+            { wch: 18 }, // 쇼핑지역
+            { wch: 14 }, // 작성자
+            { wch: 25 }, // 구매아이템
+            { wch: 10 }, // 카테고리
+            { wch: 14 }, // 구매금액(원)
+            { wch: 24 }, // 만족도
+            { wch: 40 }  // 상세후기
+          ];
+
+          // 워크북 생성 및 워크시트 추가
+          const workbook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(workbook, worksheet, "서울쇼핑후기");
+
+          // .xlsx 파일 다운로드 실행
+          XLSX.writeFile(workbook, `${defaultFileName}.xlsx`);
+          return;
+        } catch (error) {
+          console.warn("SheetJS 변환 중 오류 발생, CSV 모드로 대체합니다:", error);
+        }
+      }
+
+      // 3. Fallback: 순수 자바스크립트로 엑셀 호환 CSV (UTF-8 BOM 포함) 다운로드
+      exportToCsvFallback(defaultFileName);
+    }
+
+    /**
+     * 순수 JS를 이용한 엑셀 호환 CSV 파일 다운로드 함수
+     * - \uFEFF (UTF-8 BOM)을 추가하여 엑셀에서 열 때 한글 깨짐 방지
+     * @param {string} fileName - 저장할 파일 이름 (확장자 제외)
+     */
+    function exportToCsvFallback(fileName) {
+      // CSV 헤더 컬럼
+      const headers = ["번호", "작성일자", "쇼핑지역", "작성자", "구매아이템", "카테고리", "구매금액(원)", "만족도", "상세후기"];
+
+      // CSV 데이터 행 생성 (쉼표 및 따옴표 이스케이프 처리)
+      const rows = posts.map((post, index) => [
+        index + 1,
+        `"${post.date}"`,
+        `"${(post.region || '').replace(/"/g, '""')}"`,
+        `"${(post.author || '').replace(/"/g, '""')}"`,
+        `"${(post.itemName || '').replace(/"/g, '""')}"`,
+        `"${(post.category || '').replace(/"/g, '""')}"`,
+        post.price,
+        `"${(post.rating || '').replace(/"/g, '""')}"`,
+        `"${(post.review || '').replace(/"/g, '""').replace(/\n/g, ' ')}"`
+      ]);
+
+      // UTF-8 BOM(\uFEFF)을 맨 앞에 붙여 엑셀에서 한글 깨짐을 원천 방지
+      const csvContent = "\uFEFF" + [
+        headers.join(","),
+        ...rows.map(r => r.join(","))
+      ].join("\r\n");
+
+      // Blob 객체 생성 및 다운로드 링크 클릭 트리거
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `${fileName}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    // 엑셀 저장 버튼 클릭 이벤트 연결
+    excelBtn.addEventListener('click', exportToExcel);
+
+    // 페이지 로드 시 초기 게시글 렌더링 실행
+    window.addEventListener('DOMContentLoaded', () => {
+      renderPosts();
+    });
+  </script>
+
+</body>
+</html>
